@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flappy Fly</title>
+<meta name="description" content="A fruit fly connectome (Janelia/Google male CNS) flies Flappy Bird and learns from its crashes through dopamine.">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Flappy Fly</h1>
+    <p>80,000 neurons from the fruit fly connectome fly Flappy Bird and learn from every crash.</p>
+  </div>
+  <div class="controls" role="toolbar" aria-label="Simulation controls">
+    <button id="play" class="primary" disabled>Loading…</button>
+    <div class="seg" role="group" aria-label="Speed">
+      <button data-speed="1" class="on">1×</button>
+      <button data-speed="3">3×</button>
+      <button data-speed="0">Max</button>
+    </div>
+    <div class="seg" role="group" aria-label="Which fly">
+      <button id="fly-trained" class="on" title="A fly that has already learned from its crashes">Trained fly</button>
+      <button id="fly-newborn" title="A naive fly that has to learn from scratch">Newborn fly</button>
+    </div>
+    <details class="more">
+      <summary>Settings</summary>
+      <div class="menu">
+        <label><input type="checkbox" id="learn" checked> Learning (dopamine plasticity)</label>
+        <label><input type="checkbox" id="explore" checked> Exploration (random tries)</label>
+        <label><input type="checkbox" id="shaping" checked> Innate attraction to the opening</label>
+        <label class="radio"><span>Decides</span>
+          <select id="mode">
+            <option value="hybrid">Hybrid: brain + learned readout</option>
+            <option value="bio">Biology only: DNg02 neurons</option>
+          </select>
+        </label>
+        <button id="help-flap" class="ghost">Tap for the fly (Space)</button>
+      </div>
+    </details>
+  </div>
+</header>
+
+<main class="grid">
+  <section class="panel game">
+    <canvas id="game" aria-label="Flappy Bird game flown by the fly"></canvas>
+    <div class="hud">
+      <div><span class="k">Life</span><span id="life" class="v">1</span></div>
+      <div><span class="k">Best</span><span id="best" class="v">0</span></div>
+      <div><span class="k">Last 20</span><span id="avg" class="v">0.0</span></div>
+    </div>
+  </section>
+
+  <section class="panel brain">
+    <div class="panel-head">
+      <h2>The brain, live</h2>
+      <span class="hint">drag to rotate · double-click to reset</span>
+    </div>
+    <canvas id="brain" aria-label="Spiking activity of every simulated neuron"></canvas>
+    <div id="da-ring" class="da-ring"></div>
+    <ul class="legend" id="legend"></ul>
+    <div class="readout" id="stream-status">Starting…</div>
+  </section>
+
+  <aside class="side">
+    <section class="panel">
+      <div class="panel-head"><h2>What the fly sees</h2><span class="hint">each dot is one ommatidium column</span></div>
+      <canvas id="eye" class="eye"></canvas>
+      <p class="cap">Straight ahead is the dashed cross. The dark pillar is the next pipe. The bright notch is the gap.</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Decision</h2><span id="explore-badge" class="badge" hidden>trying something</span></div>
+      <div class="bars">
+        <div class="bar"><span>Flap</span><div class="track"><i id="q1"></i></div><b id="q1v">0.00</b></div>
+        <div class="bar"><span>Glide</span><div class="track"><i id="q0"></i></div><b id="q0v">0.00</b></div>
+        <div class="bar dn"><span>DNg02</span><div class="track"><i id="dn"></i></div><b id="dnv">0 Hz</b></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Dopamine</h2><span class="hint"><em class="rew">reward</em> · <em class="pun">punishment</em></span></div>
+      <canvas id="da" class="spark"></canvas>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Memory synapses</h2><span id="replay-badge" class="badge replay" hidden></span><span class="hint">KC → MBON strength, per MBON</span></div>
+      <canvas id="mb" class="mb"></canvas>
+      <p class="cap"><em class="pun">weakened</em> by punishment · <em class="rew">strengthened</em> by reward</p>
+    </section>
+  </aside>
+
+  <section class="panel curve">
+    <div class="panel-head"><h2>Learning from failure</h2><span class="hint">pipes passed in each life · line = average of the last 20</span></div>
+    <canvas id="curve"></canvas>
+  </section>
+
+  <section class="panel about">
+    <h2>How it works</h2>
+    <div class="cols">
+      <div>
+        <h3>The brain</h3>
+        <p>We took the complete male fruit fly central nervous system (Janelia &amp; Google, 2026) and kept every traced neuron on a short path from the eyes to the descending neurons, plus the mushroom body, the fly's learning center. That's 79,992 neurons and 4.27 million connections. Each one is a spiking leaky integrate-and-fire neuron (Shiu et al. 2024 parameters). Its sign (excitatory or inhibitory) comes from the predicted neurotransmitter.</p>
+      </div>
+      <div>
+        <h3>The eyes</h3>
+        <p>The game is rendered in 3D from the fly's head onto 4,363 lamina neurons (L1, L2, L3), each at the viewing direction of its column. Pipes are pillars with a slot. From there, everything the optic lobe does is the connectome's own wiring. A developmental phase (homeostatic synaptic scaling while watching flight scenes) set each neuron's input gain once; the gains are frozen during play.</p>
+      </div>
+      <div>
+        <h3>Learning</h3>
+        <p>Every 40 ms the fly chooses to flap or glide. When things go better or worse than expected, the surprise (a TD error) is injected as <em class="rew">reward</em> into PAM or <em class="pun">punishment</em> into PPL1 dopamine neurons. Their spikes change the Kenyon cell → MBON synapses, just as in real flies. After each crash the fly replays recent moments of flight (like rest-time consolidation), which is what makes a few hundred lives enough.</p>
+      </div>
+      <div>
+        <h3>What's biology, what's not</h3>
+        <p>The connectome has no nerve cord circuits for wing control, and its real Kenyon cells barely see where the gap is. So in <b>Hybrid</b> mode, a learned readout stands in for those premotor circuits. It reads the brain's visual populations (compressed to their main components during development) and a copy of the last wing beat. In <b>Biology only</b> mode, the DNg02 wing-power neurons decide alone. The innate attraction to the opening is a small extra reward for getting closer to the gap: the teacher knows where the gap is, the fly doesn't.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

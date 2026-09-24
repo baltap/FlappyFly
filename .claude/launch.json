@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "flappyfly", "runtimeExecutable": "node", "runtimeArgs": ["sim/serve.mjs"], "port": 8350 }
+  ]
+}
