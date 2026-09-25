@@ -36,6 +36,12 @@
             <option value="bio">Biology only: DNg02 neurons</option>
           </select>
         </label>
+        <label class="radio"><span>Pipes</span>
+          <select id="difficulty">
+            <option value="training">Training: 150 px gaps</option>
+            <option value="original">Original: 100 px gaps, big jumps</option>
+          </select>
+        </label>
         <button id="help-flap" class="ghost">Tap for the fly (Space)</button>
       </div>
     </details>
@@ -113,7 +119,7 @@
       </div>
       <div>
         <h3>What's biology, what's not</h3>
-        <p>The connectome has no nerve cord circuits for wing control, and its real Kenyon cells barely see where the gap is. So in <b>Hybrid</b> mode, a learned readout stands in for those premotor circuits. It reads the brain's visual populations (compressed to their main components during development) and a copy of the last wing beat. In <b>Biology only</b> mode, the DNg02 wing-power neurons decide alone. The innate attraction to the opening is a small extra reward for getting closer to the gap: the teacher knows where the gap is, the fly doesn't.</p>
+        <p>The connectome has no nerve cord circuits for wing control, and its real Kenyon cells barely see where the gap is. So in <b>Hybrid</b> mode, a learned readout stands in for those premotor circuits. It reads the brain's visual populations (compressed to their main components during development) and a copy of the last wing beat. In <b>Biology only</b> mode, the DNg02 wing-power neurons decide alone, and the fly never learns to pass a pipe. The mushroom body does learn from the same dopamine, but its output neurons don't know where the gap is, so those memories can't steer the wings. The innate attraction to the opening is a small extra reward for getting closer to the gap: the teacher knows where the gap is, the fly doesn't.</p>
       </div>
     </div>
   </section>

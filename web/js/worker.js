@@ -3,6 +3,7 @@ import { parseNet } from './engine.js';
 import { Agent } from './agent.js';
 import { parseNpca } from './npca.js';
 
+const DIFFICULTY = { training: { gap: 150, maxGapShift: 60 }, original: { gap: 100, maxGapShift: 140 } };
 const D = (f) => new URL(`../data/${f}`, import.meta.url).href;
 let agent = null;
 let meta = null;
@@ -48,7 +49,7 @@ function build(opts = {}) {
   // a newborn fly gets the same readout layout as the trained one, with blank weights
   const cfg = pretrained ? { pcaK: pretrained.pcaK, efference: pretrained.efference, conj: pretrained.conj } : {};
   agent = new Agent(base.net, meta, base.gains, { mode: opts.mode ?? 'hybrid', seed: opts.seed ?? (Math.random() * 1e6 | 0),
-    shaping: opts.shaping ?? 1, npca: base.npca[base.npcaName], ...cfg });
+    shaping: opts.shaping ?? 1, npca: base.npca[base.npcaName], game: DIFFICULTY[opts.difficulty ?? 'training'], ...cfg });
   if (opts.pretrained && pretrained) agent.load(pretrained);
   spikeCount = new Uint8Array(agent.brain.n);
   agent.onEpisodeEnd = (h) => newEpisodes.push(h);
@@ -119,6 +120,7 @@ onmessage = async (e) => {
     else if (m.type === 'explore') { agent.explore = m.on; }
     else if (m.type === 'shaping') { agent.o.shaping = m.value; }
     else if (m.type === 'mode') { agent.o.mode = m.mode; }
+    else if (m.type === 'difficulty') { Object.assign(agent.game.o, DIFFICULTY[m.value]); agent.game.reset(); agent.game.flap(); }
     else if (m.type === 'rebuild') { const was = running; running = false; build(m); postMessage({ type: 'rebuilt', episode: agent.episode, history: agent.history }); running = was; if (running) { lastTick = performance.now(); loop(); } }
     else if (m.type === 'flap') { pendingFlap = true; }
     else if (m.type === 'snapshot') { postMessage({ type: 'snapshot', data: agent.snapshot() }); }

@@ -19,6 +19,12 @@ eye (4,363 lamina columns) → optic lobe → visual projection neurons → cent
 npm run serve        # http://localhost:8350
 ```
 
+**Results:** a newborn fly passes almost no pipes. After ~300 lives of learning from its
+crashes, the shipped fly averages **36.6 pipes per life** with learning frozen (median 33,
+6 of 30 lives hit the 2-minute cap), and 34.8 on pipe layouts it has never seen. The same
+fly with its eyes cut scores 0. Biology-only control: 0. It does not yet cope with the
+original game's 100 px gaps. Details in [docs/RESULTS.md](docs/RESULTS.md).
+
 Everything runs in the browser (a Web Worker simulates the brain at ~1 ms steps).
 Pick **Trained fly** to watch a fly that has learned, or **Newborn fly** to watch
 one learn from scratch.
@@ -35,7 +41,8 @@ node sim/develop.mjs 40 0.25                   # development: homeostatic scalin
 node sim/develop.mjs 150 0.08 warm             # … then slow refinement → gains.f32
 node sim/record_neurons.mjs 300                # record retinotopic activity in flight
 uv run python pipeline/develop_npca.py lam 128 L1,L2,L3    # visual components
-node sim/train.mjs --mode hybrid --episodes 800 --pcaK 64 --out runs/fly.json
+node sim/train.mjs --mode hybrid --episodes 300 --pcaK 64 --seed 3 --out runs/fly.json
+node sim/evaluate.mjs runs/fly.json --lives 30          # add --blind for the ablation
 cp runs/fly.json web/data/pretrained.json
 npm test
 ```

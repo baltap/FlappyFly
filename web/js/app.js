@@ -49,10 +49,12 @@ function setFly(trained, silent) {
   $('#fly-trained').classList.toggle('on', trained);
   $('#fly-newborn').classList.toggle('on', !trained);
   state.history = []; state.best = 0; state.daTrace = [];
-  worker.postMessage({ type: 'rebuild', pretrained: trained, mode: $('#mode').value, shaping: $('#shaping').checked ? 1 : 0 });
-  worker.postMessage({ type: 'learning', on: $('#learn').checked });
-  worker.postMessage({ type: 'explore', on: trained ? false : $('#explore').checked });
-  if (trained) $('#explore').checked = false;
+  worker.postMessage({ type: 'rebuild', pretrained: trained, mode: $('#mode').value, shaping: $('#shaping').checked ? 1 : 0, difficulty: $('#difficulty').value });
+  // the trained fly keeps its memories frozen by default (continued learning can unsettle it)
+  $('#learn').checked = !trained;
+  $('#explore').checked = !trained;
+  worker.postMessage({ type: 'learning', on: !trained });
+  worker.postMessage({ type: 'explore', on: !trained });
   if (!silent) toast(trained ? 'A trained fly: it has already learned from its crashes.' : 'A newborn fly: every crash teaches it something.');
   refreshHud();
 }
@@ -191,6 +193,7 @@ $('#learn').onchange = (e) => worker.postMessage({ type: 'learning', on: e.targe
 $('#explore').onchange = (e) => worker.postMessage({ type: 'explore', on: e.target.checked });
 $('#shaping').onchange = (e) => worker.postMessage({ type: 'shaping', value: e.target.checked ? 1 : 0 });
 $('#mode').onchange = (e) => { worker.postMessage({ type: 'mode', mode: e.target.value }); toast(e.target.value === 'bio' ? 'Biology only: the DNg02 neurons decide alone.' : 'Hybrid: the learned readout decides, nudged by DNg02.'); };
+$('#difficulty').onchange = (e) => { worker.postMessage({ type: 'difficulty', value: e.target.value }); toast(e.target.value === 'original' ? 'Original pipes: much harder than what the fly trained on.' : 'Training pipes: 150 px gaps.'); };
 $('#help-flap').onclick = () => worker.postMessage({ type: 'flap' });
 window.addEventListener('keydown', (e) => { if (e.code === 'Space' && e.target === document.body) { e.preventDefault(); worker.postMessage({ type: 'flap' }); } });
 window.addEventListener('resize', () => state.ready && drawCurve());
