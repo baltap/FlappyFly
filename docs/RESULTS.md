@@ -9,7 +9,7 @@ jumps between pipes ("training" difficulty) unless stated otherwise. Lives are c
 
 Yes, in hybrid mode. Mean pipes passed per life while learning:
 
-| Run | lives 1–50 | 51–100 | 101–200 | 201–300 | 301–400 | best |
+| Run | lives 1 to 50 | 51 to 100 | 101 to 200 | 201 to 300 | 301 to 400 | best |
 |---|---|---|---|---|---|---|
 | **64 PCs + replay, seed 3 (shipped fly)** | 2.1 | 3.1 | 3.5 | 6.9 | 6.7 | 35 |
 | 64 PCs + replay, seed 2 | 0.6 | 1.5 | 2.1 | 4.2 | 5.6 | 28 |
@@ -17,9 +17,9 @@ Yes, in hybrid mode. Mean pipes passed per life while learning:
 | 96 PCs + replay | 0.9 | 2.0 | 2.6 | 4.1 | 5.0 | 21 |
 | 128 PCs + replay | 1.4 | 2.1 | 2.5 | 5.7 | 5.6 | 30 |
 | 64 PCs + replay, **no shaping** | 0.6 | 0.7 | 1.8 | 2.7 | 3.3 | 25 |
-| 64 PCs, no replay | 0.3 | 0.8 | 1.2 | 1.6 | – | 17 |
-| **Biology only** (DNg02 decides, KC→MBON learns) | 0.02 | 0.00 | – | – | – | 1 |
-| Biology only, no plasticity | 0.00 | 0.00 | – | – | – | 0 |
+| 64 PCs, no replay | 0.3 | 0.8 | 1.2 | 1.6 | n/a | 17 |
+| **Biology only** (DNg02 decides, KC→MBON learns) | 0.02 | 0.00 | n/a | n/a | n/a | 1 |
+| Biology only, no plasticity | 0.00 | 0.00 | n/a | n/a | n/a | 0 |
 
 A newborn fly passes almost nothing in its first lives. Every hybrid run improves
 steadily over a few hundred lives, across seeds and readout sizes.
@@ -38,7 +38,7 @@ steadily over a few hundred lives, across seeds and readout sizes.
 * Frozen checkpoints can beat the same fly's continued online learning (seed 3 was
   averaging ~5 while still learning at life 450). Continued learning with ε = 0.01 and
   replay keeps shifting the readout. That's why the app's trained fly starts with learning off.
-* Seed-to-seed spread is large (frozen means 6–37). Seed 3 is the best of five
+* Seed-to-seed spread is large (frozen means 6 to 37). Seed 3 is the best of five
   comparable runs, not a typical one.
 * The fly does **not** handle the original game's tighter pipes. The lamina components
   locate the gap to roughly ±30 px, about the whole margin a 100 px gap leaves.

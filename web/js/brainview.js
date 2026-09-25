@@ -2,7 +2,7 @@
 // fly's left on the right as if facing the fly). Spikes flash and decay.
 
 export const CLASS_STYLE = {
-  eye:     { col: [0.55, 0.78, 1.00], size: 1.6, label: 'Eye (lamina L1–L3)' },
+  eye:     { col: [0.55, 0.78, 1.00], size: 1.6, label: 'Eye (lamina L1 to L3)' },
   optic:   { col: [0.28, 0.45, 1.00], size: 1.4, label: 'Optic lobe' },
   vpn:     { col: [0.20, 0.80, 0.90], size: 1.8, label: 'Visual projection neurons' },
   central: { col: [0.62, 0.48, 1.00], size: 1.6, label: 'Central brain' },

@@ -31,7 +31,7 @@ synapse counts).
 ### Eye geometry
 Only 15 columnar types carry hex coordinates. A linear fit of lamina soma positions to
 (hex1, hex2) gives R² 0.99 for the dorsoventral axis: **hex1+hex2 runs ventral→dorsal,
-hex2−hex1 runs anterior→posterior**, the same on both eyes. These map linearly (1st–99th
+hex2−hex1 runs anterior→posterior**, the same on both eyes. These map linearly (1st to 99th
 percentile) to elevation −70…+70° and azimuth −15…160°.
 Receptive-field centres of the other visual neurons are propagated through excitatory
 synapses (synapse-weighted mean of the inputs' directions, 6 passes), with the spread
@@ -102,7 +102,7 @@ the last wing beat, which real flies have.
 
 ### Dead ends worth remembering
 * Actor-critic policy gradient: unstable and slow even on ground-truth features.
-* Linear readout over 4–7k raw pools: no learning in 300 lives.
+* Linear readout over 4k to 7k raw pools: no learning in 300 lives.
 * A random KC-like expansion of PCs decoded worse than the PCs themselves.
 * Temporal smoothing of PCs: no gain (the noise is representational, not temporal).
 * zsh does not word-split `$var`: parameter sweeps silently passed NaN. Use `${=var}`.
